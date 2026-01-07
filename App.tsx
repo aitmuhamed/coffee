@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from './store/store';
 import { addToCart, removeFromCart, updateQuantity, toggleCart } from './store/cartSlice';
@@ -92,6 +92,19 @@ const LandingPage: React.FC = () => {
   const lang = useSelector((state: RootState) => state.language.current);
   const theme = useSelector((state: RootState) => state.theme.current);
   const t = translations[lang].about;
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const id = hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
+    }
+  }, [hash]);
   
   return (
     <main>
@@ -195,6 +208,10 @@ const App: React.FC = () => {
           <Route path="/" element={<><LandingPage /><Footer /></>} />
           <Route path="/gallery" element={<><main className="pt-24"><GallerySection /></main><Footer /></>} />
           <Route path="/admin" element={<AdminPanel />} />
+          {/* Ensure direct navigation to these paths redirects to home to allow scrolling logic */}
+          <Route path="/menu" element={<Navigate to="/#menu" replace />} />
+          <Route path="/about" element={<Navigate to="/#about" replace />} />
+          <Route path="/contact" element={<Navigate to="/#contact" replace />} />
         </Routes>
 
         <CartDrawer 
