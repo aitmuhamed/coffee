@@ -5,6 +5,7 @@ import cartReducer from './cartSlice';
 import languageReducer from './languageSlice';
 import currencyReducer from './currencySlice';
 import galleryReducer from './gallerySlice';
+import themeReducer from './themeSlice';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     language: languageReducer,
     currency: currencyReducer,
     gallery: galleryReducer,
+    theme: themeReducer,
   },
 });
 

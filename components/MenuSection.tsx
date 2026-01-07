@@ -18,6 +18,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
   const menuItems = useSelector((state: RootState) => state.menu.items);
   const lang = useSelector((state: RootState) => state.language.current);
   const currency = useSelector((state: RootState) => state.currency);
+  const theme = useSelector((state: RootState) => state.theme.current);
   const t = translations[lang].menu;
   const itemTranslations = translations[lang].menuItems;
   const categoryLabels = translations[lang].categories;
@@ -36,10 +37,10 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
   });
 
   return (
-    <section className="py-24 bg-white">
+    <section className={`py-24 ${theme === 'dark' ? 'bg-[#121212]' : 'bg-white'} transition-colors duration-500`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-coffee-dark mb-4 tracking-tight">{t.title}</h2>
+          <h2 className={`text-3xl md:text-4xl font-serif font-bold ${theme === 'dark' ? 'text-white' : 'text-coffee-dark'} mb-4 tracking-tight`}>{t.title}</h2>
           <p className="text-gray-400 max-w-md mx-auto font-light text-sm leading-relaxed">
             {t.desc}
           </p>
@@ -54,7 +55,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
               placeholder={lang === 'en' ? 'Search our brews...' : 'Хайлт хийх...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-coffee-light focus:bg-white transition-all placeholder:text-gray-300"
+              className={`w-full ${theme === 'dark' ? 'bg-white/5 border-white/5 text-white' : 'bg-gray-50 border-gray-100 text-gray-800'} border rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-coffee-light transition-all placeholder:text-gray-400`}
             />
             {searchQuery && (
               <button 
@@ -75,7 +76,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
                 className={`px-7 py-2 rounded-full transition-all text-[10px] font-bold uppercase tracking-widest ${
                   activeCategory === cat 
                     ? 'bg-coffee-dark text-white shadow-md' 
-                    : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
+                    : (theme === 'dark' ? 'bg-white/5 text-gray-400 hover:bg-white/10' : 'bg-gray-50 text-gray-400 hover:bg-gray-100')
                 }`}
               >
                 {categoryLabels[cat as keyof typeof categoryLabels]}
@@ -113,7 +114,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
                       <ICONS.Plus className="w-5 h-5" />
                     </button>
 
-                    <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-bold text-coffee-dark shadow-sm flex items-center space-x-1">
+                    <div className={`absolute top-4 right-4 ${theme === 'dark' ? 'bg-black/80 text-white border-white/10' : 'bg-white/95 text-coffee-dark border-gray-100'} backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-bold shadow-sm flex items-center space-x-1 border`}>
                       <span className="w-1 h-1 bg-green-500 rounded-full animate-pulse"></span>
                       <PriceDisplay usdPrice={item.sizes ? item.sizes[0].price : item.price} currency={currency} lang={lang} />
                     </div>
@@ -123,7 +124,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
                       className="flex justify-between items-baseline mb-2 cursor-pointer"
                       onClick={() => setSelectedItem(item)}
                     >
-                      <h3 className="text-lg font-bold text-coffee-dark group-hover:text-coffee-light transition-colors">{translated.name}</h3>
+                      <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-gray-100' : 'text-coffee-dark'} group-hover:text-coffee-light transition-colors`}>{translated.name}</h3>
                       <span className="text-[9px] uppercase tracking-widest text-coffee-light font-bold bg-coffee-light/5 px-2 py-0.5 rounded">
                         {categoryLabels[item.category as keyof typeof categoryLabels]}
                       </span>
@@ -136,7 +137,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
                     </p>
                     <button 
                       onClick={() => setSelectedItem(item)}
-                      className="w-full bg-white border border-gray-100 text-coffee-dark py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-coffee-dark hover:text-white hover:border-coffee-dark transition-all flex items-center justify-center space-x-2 shadow-sm"
+                      className={`w-full ${theme === 'dark' ? 'bg-white/5 border-white/5 text-white hover:bg-white hover:text-black' : 'bg-white border-gray-100 text-coffee-dark hover:bg-coffee-dark hover:text-white'} py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center space-x-2 shadow-sm`}
                     >
                       <span>View Details</span>
                     </button>
@@ -146,7 +147,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onAddToCart }) => {
             })}
           </div>
         ) : (
-          <div className="text-center py-20 bg-gray-50 rounded-[2.5rem] border border-dashed border-gray-200">
+          <div className={`text-center py-20 ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'} rounded-[2.5rem] border border-dashed border-gray-200`}>
             <ICONS.Search className="w-8 h-8 text-gray-300 mx-auto mb-4 opacity-50" />
             <p className="text-gray-400 font-serif italic text-lg">No items found matching your selection.</p>
             <button 

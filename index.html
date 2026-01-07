@@ -24,7 +24,6 @@
         .border-coffee-light { border-color: #d4a373; }
         .bg-coffee-light { background-color: #d4a373; }
         
-        /* Custom smooth hover effects */
         .hover-lift {
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -32,14 +31,20 @@
             transform: translateY(-4px);
         }
 
-        /* Hide scrollbar for Chrome, Safari and Opera */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
-        /* Hide scrollbar for IE, Edge and Firefox */
         .no-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        @keyframes ken-burns {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        .animate-ken-burns {
+            animation: ken-burns 10s linear infinite alternate;
         }
     </style>
 <script type="importmap">
@@ -57,12 +62,9 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body>
     <div id="root"></div>
-    <!-- The entry point for the React application -->
     <script type="module" src="./index.tsx"></script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>

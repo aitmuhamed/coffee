@@ -14,6 +14,7 @@ import AIConcierge from './components/AIConcierge';
 import ContactSection from './components/ContactSection';
 import CartDrawer from './components/CartDrawer';
 import AdminPanel from './components/AdminPanel';
+import Logo from './components/Logo';
 
 /**
  * ScrollToTop component ensures that navigation to new routes 
@@ -30,24 +31,26 @@ const ScrollToTop = () => {
 const Footer = () => {
   const lang = useSelector((state: RootState) => state.language.current);
   const currency = useSelector((state: RootState) => state.currency);
+  const theme = useSelector((state: RootState) => state.theme.current);
   const t = translations[lang].footer;
 
   return (
-    <footer className="bg-coffee-dark text-white py-24">
+    <footer className={`${theme === 'dark' ? 'bg-[#0f0a09]' : 'bg-coffee-dark'} text-white py-24 transition-colors duration-500`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-8">
-              <div className="relative flex items-center justify-center w-14 h-14 rounded-full border border-white/20">
-                <span className="text-3xl font-serif font-bold tracking-tighter">57</span>
-                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-coffee-light"></div>
+              <Logo variant="light" className="w-16 h-16 mr-4" />
+              <div>
+                <span className="text-3xl font-serif font-bold tracking-tighter block leading-none">57</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-coffee-light">Coffee House</span>
               </div>
             </div>
             <p className="text-gray-400 max-w-sm font-light leading-relaxed text-sm mb-10">
               {t.desc}
             </p>
             <div className="flex items-center space-x-6">
-               <a href="#/admin" className="text-gray-600 hover:text-brand-orange transition-colors text-[10px] font-black uppercase tracking-widest">{t.dashboard}</a>
+               <a href="#/admin" className="text-gray-600 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest">{t.dashboard}</a>
                <span className="w-1 h-1 bg-white/10 rounded-full"></span>
                {currency.lastUpdated && (
                  <p className="text-[9px] text-white/20 uppercase tracking-[0.2em]">
@@ -91,6 +94,7 @@ const Footer = () => {
 const LandingPage: React.FC = () => {
   const dispatch = useDispatch();
   const lang = useSelector((state: RootState) => state.language.current);
+  const theme = useSelector((state: RootState) => state.theme.current);
   const t = translations[lang].about;
   
   return (
@@ -107,7 +111,7 @@ const LandingPage: React.FC = () => {
         <MenuSection onAddToCart={(payload) => dispatch(addToCart(payload))} />
       </section>
 
-      <section id="about" className="py-32 bg-[#faf9f6]">
+      <section id="about" className={`py-32 ${theme === 'dark' ? 'bg-[#1a1210]' : 'bg-[#faf9f6]'} transition-colors duration-500`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <div className="relative">
@@ -122,7 +126,7 @@ const LandingPage: React.FC = () => {
             </div>
             <div>
               <span className="text-coffee-light font-black text-[11px] uppercase tracking-[0.5em] mb-6 inline-block">{t.tag}</span>
-              <h2 className="text-5xl md:text-7xl font-serif font-bold text-coffee-dark mb-10 leading-[0.9] tracking-tighter">
+              <h2 className={`text-5xl md:text-7xl font-serif font-bold ${theme === 'dark' ? 'text-white' : 'text-coffee-dark'} mb-10 leading-[0.9] tracking-tighter`}>
                 {t.title.split('Meets')[0]}
                 <span className="italic block text-coffee-light opacity-80 mt-2">
                   {t.title.includes('Meets') ? 'Meets Artisan.' : ''}
@@ -131,7 +135,7 @@ const LandingPage: React.FC = () => {
                   {t.title.includes('мастерство') ? 'и мастерство.' : ''}
                 </span>
               </h2>
-              <p className="text-gray-500 text-lg md:text-xl mb-12 leading-relaxed font-light">
+              <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} text-lg md:text-xl mb-12 leading-relaxed font-light`}>
                 {t.desc}
               </p>
               <div className="space-y-8 mb-16">
@@ -140,7 +144,7 @@ const LandingPage: React.FC = () => {
                     <span className="text-coffee-light text-xs font-black">01</span>
                   </div>
                   <div>
-                    <h4 className="font-black text-xs text-coffee-dark uppercase tracking-widest mb-2">{t.feat1_title}</h4>
+                    <h4 className={`font-black text-xs ${theme === 'dark' ? 'text-gray-100' : 'text-coffee-dark'} uppercase tracking-widest mb-2`}>{t.feat1_title}</h4>
                     <p className="text-gray-400 text-sm font-light leading-relaxed">{t.feat1_desc}</p>
                   </div>
                 </div>
@@ -149,14 +153,14 @@ const LandingPage: React.FC = () => {
                     <span className="text-coffee-light text-xs font-black">02</span>
                   </div>
                   <div>
-                    <h4 className="font-black text-xs text-coffee-dark uppercase tracking-widest mb-2">{t.feat2_title}</h4>
+                    <h4 className={`font-black text-xs ${theme === 'dark' ? 'text-gray-100' : 'text-coffee-dark'} uppercase tracking-widest mb-2`}>{t.feat2_title}</h4>
                     <p className="text-gray-400 text-sm font-light leading-relaxed">{t.feat2_desc}</p>
                   </div>
                 </div>
               </div>
               <a 
                 href="#menu" 
-                className="inline-flex bg-coffee-dark text-white px-12 py-5 rounded-full font-black hover:bg-coffee-light transition-all text-[11px] tracking-[0.3em] uppercase shadow-xl shadow-brand-dark/10"
+                className={`inline-flex ${theme === 'dark' ? 'bg-white text-coffee-dark' : 'bg-coffee-dark text-white'} px-12 py-5 rounded-full font-black hover:bg-coffee-light hover:text-white transition-all text-[11px] tracking-[0.3em] uppercase shadow-xl shadow-brand-dark/10`}
               >
                 {t.cta}
               </a>
@@ -171,8 +175,9 @@ const LandingPage: React.FC = () => {
 };
 
 const GalleryPage: React.FC = () => {
+  const theme = useSelector((state: RootState) => state.theme.current);
   return (
-    <main className="pt-24 bg-white">
+    <main className={`pt-24 ${theme === 'dark' ? 'bg-[#121212]' : 'bg-white'} transition-colors duration-500`}>
       <GallerySection />
     </main>
   );
@@ -182,6 +187,7 @@ const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const isCartOpen = useSelector((state: RootState) => state.cart.isOpen);
+  const theme = useSelector((state: RootState) => state.theme.current);
 
   useEffect(() => {
     dispatch(fetchRates());
@@ -190,7 +196,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen bg-[#faf9f6]">
+      <div className={`min-h-screen ${theme === 'dark' ? 'bg-[#121212]' : 'bg-[#faf9f6]'} transition-colors duration-500`}>
         <Navbar 
           cartCount={cartItems.reduce((acc, item) => acc + item.quantity, 0)} 
           onCartToggle={() => dispatch(toggleCart())} 
