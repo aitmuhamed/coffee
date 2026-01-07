@@ -16,10 +16,6 @@ import CartDrawer from './components/CartDrawer';
 import AdminPanel from './components/AdminPanel';
 import Logo from './components/Logo';
 
-/**
- * ScrollToTop component ensures that navigation to new routes 
- * always starts at the top of the page.
- */
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -158,27 +154,20 @@ const LandingPage: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <a 
-                href="#menu" 
+              <button 
+                onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })}
                 className={`inline-flex ${theme === 'dark' ? 'bg-white text-coffee-dark' : 'bg-coffee-dark text-white'} px-12 py-5 rounded-full font-black hover:bg-coffee-light hover:text-white transition-all text-[11px] tracking-[0.3em] uppercase shadow-xl shadow-brand-dark/10`}
               >
                 {t.cta}
-              </a>
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      <ContactSection />
-    </main>
-  );
-};
-
-const GalleryPage: React.FC = () => {
-  const theme = useSelector((state: RootState) => state.theme.current);
-  return (
-    <main className={`pt-24 ${theme === 'dark' ? 'bg-[#121212]' : 'bg-white'} transition-colors duration-500`}>
-      <GallerySection />
+      <section id="contact">
+        <ContactSection />
+      </section>
     </main>
   );
 };
@@ -204,7 +193,7 @@ const App: React.FC = () => {
         
         <Routes>
           <Route path="/" element={<><LandingPage /><Footer /></>} />
-          <Route path="/gallery" element={<><GalleryPage /><Footer /></>} />
+          <Route path="/gallery" element={<><main className="pt-24"><GallerySection /></main><Footer /></>} />
           <Route path="/admin" element={<AdminPanel />} />
         </Routes>
 

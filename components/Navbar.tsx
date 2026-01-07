@@ -58,10 +58,10 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onCartToggle }) => {
 
   const navLinks = [
     { name: t.home, href: '/' },
-    { name: t.menu, href: '/#menu' },
-    { name: t.about, href: '/#about' },
+    { name: t.menu, href: '/menu' },
+    { name: t.about, href: '/about' },
     { name: t.gallery || 'Gallery', href: '/gallery' },
-    { name: t.contact, href: '/#contact' },
+    { name: t.contact, href: '/contact' },
   ];
 
   const languages: { code: Language; label: string; full: string }[] = [
@@ -84,68 +84,69 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onCartToggle }) => {
     e.preventDefault();
     setIsOpen(false);
 
-    if (href === '/gallery' || href === '/admin') {
-      navigate(href);
-      return;
-    }
-
-    if (href.startsWith('/#')) {
-      const anchorId = href.split('#')[1];
-      if (location.pathname === '/') {
-        const target = document.getElementById(anchorId);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      } else {
-        navigate('/');
-        setTimeout(() => {
-          const target = document.getElementById(anchorId);
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 100);
-      }
-    } else if (href === '/') {
+    // HashRouter navigation
+    if (href === '/') {
       navigate('/');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (href === '/menu') {
+       // If we are on home page, scroll to menu section
+       if (location.pathname === '/') {
+          document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' });
+       } else {
+          navigate('/');
+          setTimeout(() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' }), 100);
+       }
+    } else if (href === '/about') {
+       if (location.pathname === '/') {
+          document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+       } else {
+          navigate('/');
+          setTimeout(() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }), 100);
+       }
+    } else if (href === '/contact') {
+       if (location.pathname === '/') {
+          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+       } else {
+          navigate('/');
+          setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100);
+       }
+    } else {
+      navigate(href);
     }
   };
 
-  const isScrolledOrNotHome = scrolled || location.pathname !== '/';
+  const isScrolledOrNotHome = scrolled || (location.pathname !== '/' && location.pathname !== '');
 
   return (
     <nav className={`fixed w-full top-0 z-50 transition-all duration-700 ${
       isScrolledOrNotHome 
-        ? (theme === 'dark' ? 'bg-[#1a1210] py-2 shadow-2xl' : 'bg-white py-2 shadow-xl') 
+        ? (theme === 'dark' ? 'bg-[#1a1210] py-2 shadow-2xl border-b border-white/5' : 'bg-white py-2 shadow-xl') 
         : 'bg-transparent py-6'
     }`}>
-      <div className="max-w-7xl auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <div className="flex-shrink-0">
-            <a 
-              href="#/" 
-              onClick={(e) => handleLinkClick(e, '/')}
-              className="transition-all duration-300 block"
+            <button 
+              onClick={(e) => handleLinkClick(e as any, '/')}
+              className="transition-all duration-300 block focus:outline-none"
             >
               <Logo 
                 variant={isScrolledOrNotHome ? 'orange' : 'light'} 
                 className="w-14 h-14 md:w-16 md:h-16" 
               />
-            </a>
+            </button>
           </div>
           
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
             {navLinks.map((link) => (
               <a
                 key={link.name}
-                href={link.href}
+                href={`#${link.href}`}
                 onClick={(e) => handleLinkClick(e, link.href)}
                 className={`text-[10px] font-black uppercase tracking-[0.25em] transition-all hover:text-coffee-light ${
                   isScrolledOrNotHome 
                     ? (theme === 'dark' ? 'text-gray-100' : 'text-gray-800') 
                     : 'text-white/90'
-                } ${
-                  (location.pathname === link.href) ? 'text-coffee-light' : ''
                 }`}
               >
                 {link.name}
@@ -175,41 +176,7 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onCartToggle }) => {
                 )}
               </button>
 
-              {/* Currency Selector */}
-              <div className="relative" ref={currencyRef}>
-                <button
-                  onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-                  className={`flex items-center space-x-1.5 text-[10px] font-black uppercase tracking-widest transition-colors ${
-                    isScrolledOrNotHome 
-                      ? (theme === 'dark' ? 'text-gray-300' : 'text-gray-600') 
-                      : 'text-white'
-                  } hover:text-coffee-light`}
-                >
-                  <span className="text-coffee-light">{currency.symbol}</span>
-                  <span>{currency.code}</span>
-                  <ICONS.ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isCurrencyOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                <div className={`absolute top-full right-0 mt-4 w-36 ${theme === 'dark' ? 'bg-[#1e1e1e] border-white/5 shadow-black/40' : 'bg-white border-gray-100 shadow-2xl'} rounded-2xl border overflow-hidden transition-all transform origin-top-right ${
-                  isCurrencyOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-                }`}>
-                  {currencies.map((c) => (
-                    <button
-                      key={c.code}
-                      onClick={() => { dispatch(setCurrency(c.code)); setIsCurrencyOpen(false); }}
-                      className={`w-full px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest transition-colors flex justify-between items-center ${
-                        currency.code === c.code 
-                          ? 'text-coffee-light bg-coffee-light/5' 
-                          : (theme === 'dark' ? 'text-gray-400 hover:bg-white/5' : 'text-gray-600 hover:bg-gray-50')
-                      }`}
-                    >
-                      <span>{c.label}</span>
-                      <span className="text-gray-300">{c.symbol}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
+              {/* Language Selector */}
               <div className="relative" ref={langRef}>
                 <button
                   onClick={() => setIsLangOpen(!isLangOpen)}
@@ -243,7 +210,7 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onCartToggle }) => {
               </div>
 
               <button 
-                onClick={(e) => handleLinkClick(e as any, '/#menu')}
+                onClick={(e) => handleLinkClick(e as any, '/menu')}
                 className={`px-8 py-3 rounded-full font-black text-[10px] uppercase tracking-[0.2em] transition-all transform active:scale-95 ${
                   isScrolledOrNotHome
                     ? 'bg-coffee-dark text-white hover:bg-coffee-light shadow-lg' 
@@ -285,36 +252,16 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onCartToggle }) => {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       <div className={`md:hidden absolute w-full ${theme === 'dark' ? 'bg-[#1a1210]' : 'bg-white'} transition-all duration-500 transform ${
         isOpen ? 'translate-y-0 opacity-100 shadow-2xl' : '-translate-y-full opacity-0 pointer-events-none'
       }`}>
         <div className="px-8 py-10 space-y-8">
-          <div className={`flex justify-between items-start border-b ${theme === 'dark' ? 'border-white/5' : 'border-gray-50'} pb-8`}>
-            <div className="space-y-4">
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Language</p>
-              <div className="flex flex-wrap gap-4">
-                {languages.map(l => (
-                  <button key={l.code} onClick={() => { dispatch(setLanguage(l.code)); setIsOpen(false); }} className={`text-[11px] font-black uppercase ${lang === l.code ? 'text-coffee-light' : 'text-gray-400'}`}>
-                    {l.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-4">
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Theme</p>
-              <button 
-                onClick={() => dispatch(toggleTheme())}
-                className={`text-[11px] font-black uppercase ${theme === 'dark' ? 'text-yellow-400' : 'text-gray-400'}`}
-              >
-                {theme === 'light' ? 'Light' : 'Dark'}
-              </button>
-            </div>
-          </div>
           <div className="space-y-6">
             {navLinks.map((link) => (
               <a
                 key={link.name}
-                href={link.href}
+                href={`#${link.href}`}
                 onClick={(e) => handleLinkClick(e, link.href)}
                 className={`block text-2xl font-serif font-bold ${
                   location.pathname === link.href 
@@ -325,6 +272,13 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onCartToggle }) => {
                 {link.name}
               </a>
             ))}
+            <a
+                href="#/admin"
+                onClick={(e) => handleLinkClick(e, '/admin')}
+                className={`block text-2xl font-serif font-bold ${theme === 'dark' ? 'text-white/40' : 'text-brand-dark/40'}`}
+              >
+                Dashboard
+              </a>
           </div>
         </div>
       </div>
