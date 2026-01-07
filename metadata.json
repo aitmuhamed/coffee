@@ -1,0 +1,8 @@
+
+{
+  "name": "57 Coffee House",
+  "description": "A premium, modern coffee house experience featuring a digital sommelier powered by Gemini to help you find your perfect brew.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
